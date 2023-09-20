@@ -68,6 +68,7 @@ public class RandomWalk {
      * @param n the number of experiments to run
      * @return the mean distance
      */
+
     public static double randomWalkMulti(int m, int n) {
         double totalDistance = 0;
         for (int i = 0; i < n; i++) {
