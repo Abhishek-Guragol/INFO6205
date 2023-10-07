@@ -10,16 +10,18 @@ import edu.neu.coe.info6205.util.LazyLogger;
 import edu.neu.coe.info6205.util.PrivateMethodTester;
 import edu.neu.coe.info6205.util.StatPack;
 import org.junit.Test;
+import scala.Int;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("ALL")
 public class InsertionSortTest {
+
+    int[] values = {10, 20, 40, 80, 160};
 
     @Test
     public void sort0() throws Exception {
@@ -139,6 +141,93 @@ public class InsertionSortTest {
         assertEquals(inversions, fixes);
     }
 
+    @Test
+    public void randomTest() throws Exception{
+        System.out.println("......................Random Order Array........................");
+        for(int n: values){
+            System.out.println("......................Value:"+n+"........................");
+            Integer[] array = arrayGen(n);
+            int runs = 10000;
+            double runTime = benchmarkSort(runs, n ,array);
+            System.out.println("Time taken for "+n+"\t:\t"+runTime);
+
+        }
+    }
+
+    @Test
+    public void sortedTest() throws Exception{
+        System.out.println("......................Sorted Order Array........................");
+        for(int n: values){
+            System.out.println("......................Value:"+n+"........................");
+            Integer[] array = arrayGen(n);
+            Arrays.sort(array);
+            int runs = 10000;
+            double runTime = benchmarkSort(runs, n ,array);
+            System.out.println("Time taken for "+n+"\t:\t"+runTime);
+
+        }
+    }
+
+    @Test
+    public void reverseSortedTest() throws Exception{
+        System.out.println("......................Reverse Order Array........................");
+        for(int n: values){
+            System.out.println("......................Value:"+n+"........................");
+            Integer[] array = arrayGen(n);
+            Arrays.sort(array, Collections.reverseOrder());
+            int runs = 10000;
+            double runTime = benchmarkSort(runs, n ,array);
+            System.out.println("Time taken for "+n+"\t:\t"+runTime);
+
+        }
+    }
+
+
+    @Test
+    public void partialSortedTest() throws Exception{
+        System.out.println("......................Partial Sorted Order Array........................");
+        for(int n: values){
+            System.out.println("......................Value:"+n+"........................");
+            Integer[] array = arrayGen(n);
+            Arrays.sort(array, 0 , (n*3)/5);
+            int runs = 10000;
+            double runTime = benchmarkSort(runs, n ,array);
+            System.out.println("Time taken for "+n+"\t:\t"+runTime);
+
+        }
+    }
+
+
+
+//    Functions to generate the random Array
+    public Integer[] arrayGen(int n){
+        Random rd = new Random();
+        Integer[] array = new Integer[n];
+        for(int i= 0; i<n; i++){
+            array[i] = rd.nextInt(n);
+        }
+        return array;
+
+
+    }
+
+//    Function to benchmark the time
+    public double benchmarkSort(int runs, int n, Integer[] array){
+        Integer[] copy = Arrays.copyOf(array, n);
+        long time = 0;
+        InsertionSort sort = new InsertionSort();
+        for(int i = 0; i< runs; i++){
+            long start = System.nanoTime();
+            sort.sort(copy, 0 , n);
+            long end = System.nanoTime();
+
+            time += (end - start);
+            copy = Arrays.copyOf(array, n);
+        }
+
+//        Returns the mean time taken
+        return (double) time/runs;
+    }
     final static LazyLogger logger = new LazyLogger(InsertionSort.class);
 
 }
