@@ -2,6 +2,8 @@ package edu.neu.coe.info6205.sort.par;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * This code has been fleshed out by Ziyao Qiao. Thanks very much.
@@ -43,6 +45,8 @@ class ParSort {
     }
 
     private static CompletableFuture<int[]> parsort(int[] array, int from, int to) {
+
+        Executor exec = Executors.newFixedThreadPool(2);
         return CompletableFuture.supplyAsync(
                 () -> {
                     int[] result = new int[to - from];
@@ -51,6 +55,6 @@ class ParSort {
                     sort(result, 0, to - from);
                     return result;
                 }
-        );
+        , exec);
     }
 }
